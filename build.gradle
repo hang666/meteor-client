@@ -75,7 +75,8 @@ shadowJar {
 
 processResources {
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand "version": project.version,
+               "commit": project.findProperty("commit") ?: ""
     }
 }
 
