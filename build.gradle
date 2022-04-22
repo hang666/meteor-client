@@ -63,6 +63,9 @@ dependencies {
     library "io.gitlab.jfronny.libjf:libjf-unsafe-v0:${project.jfapi_version}"
     include "io.gitlab.jfronny.libjf:libjf-base:${project.jfapi_version}"
     modRuntimeOnly "io.gitlab.jfronny.libjf:libjf-devutil-v0:${project.jfapi_version}"
+
+    // Launch sub project
+    shadow project(":launch")
 }
 
 loom {
@@ -94,6 +97,7 @@ remapJar {
 
 javadoc {
     options.addStringOption('Xdoclint:none', '-quiet')
+    options.encoding = "UTF-8"
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
