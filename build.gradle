@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.11-SNAPSHOT'
+    id 'fabric-loom' version '0.12-SNAPSHOT'
     id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
@@ -22,13 +22,11 @@ repositories {
     maven {
         url "https://gitlab.com/api/v4/projects/25805200/packages/maven"
     }
-    maven { url 'https://api.modrinth.com/maven' }
-
-    // For Canvas
     maven {
         name = "vram"
         url = "https://maven.vram.io/"
     }
+    mavenCentral()
 }
 
 dependencies {
@@ -53,13 +51,16 @@ dependencies {
     modCompileOnly("io.vram:canvas-fabric-mc118:1.0.+") { transitive = false }
 
 	// Baritone integration
-    library "baritone:baritone:${project.baritone_version}"
+    library "baritone:fabric:${project.baritone_version}"
 
     // Libraries
     library "meteordevelopment:orbit:${project.orbit_version}"
     library "meteordevelopment:starscript:${project.starscript_version}"
     library "org.reflections:reflections:${project.reflections_version}"
-    include "org.javassist:javassist:3.28.0-GA"
+
+    implementation("io.netty:netty-handler-proxy:4.1.77.Final") { transitive = false }
+    shadow("io.netty:netty-handler-proxy:4.1.77.Final") { transitive = false }
+
     library "io.gitlab.jfronny.libjf:libjf-unsafe-v0:${project.jfapi_version}"
     include "io.gitlab.jfronny.libjf:libjf-base:${project.jfapi_version}"
     modRuntimeOnly "io.gitlab.jfronny.libjf:libjf-devutil-v0:${project.jfapi_version}"

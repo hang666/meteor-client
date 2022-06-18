@@ -8,20 +8,28 @@ package meteordevelopment.meteorclient.systems.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.tree.*;
 import meteordevelopment.meteorclient.systems.System;
 import meteordevelopment.meteorclient.systems.Systems;
 import meteordevelopment.meteorclient.systems.commands.commands.*;
+import meteordevelopment.meteorclient.systems.commands.commands.EnchantCommand;
+import meteordevelopment.meteorclient.systems.commands.commands.GiveCommand;
+import meteordevelopment.meteorclient.systems.commands.commands.LocateCommand;
+import meteordevelopment.meteorclient.systems.commands.commands.ReloadCommand;
+import meteordevelopment.meteorclient.systems.commands.commands.SayCommand;
+import meteordevelopment.meteorclient.systems.commands.commands.SpectateCommand;
+import net.fabricmc.fabric.api.client.command.v2.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientCommandSource;
-import net.minecraft.command.CommandSource;
-import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
+import net.minecraft.command.*;
 
 import java.util.*;
 
 import static meteordevelopment.meteorclient.MeteorClient.mc;
 
 public class Commands extends System<Commands> {
-    private final CommandDispatcher<CommandSource> DISPATCHER = (CommandDispatcher<CommandSource>)(Object)ClientCommandManager.DISPATCHER;
+    public static final DelegateCRM REGISTRY_ACCESS = new DelegateCRM();
+    private final CommandDispatcher<FabricClientCommandSource> DISPATCHER = new CommandDispatcher<>();
     private final List<Command> commands = new ArrayList<>();
     private final Map<Class<? extends Command>, Command> commandInstances = new HashMap<>();
 
@@ -71,6 +79,27 @@ public class Commands extends System<Commands> {
         add(new WaypointCommand());
 
         commands.sort(Comparator.comparing(Command::getName));
+
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            REGISTRY_ACCESS.setDelegate(registryAccess);
+            Map<CommandNode<FabricClientCommandSource>, CommandNode<FabricClientCommandSource>> originalToCopy = new HashMap<>();
+            originalToCopy.put(DISPATCHER.getRoot(), dispatcher.getRoot());
+            copyChildren(DISPATCHER.getRoot(), dispatcher.getRoot(), originalToCopy);
+        });
+    }
+
+    private static void copyChildren(CommandNode<FabricClientCommandSource> origin,
+                                     CommandNode<FabricClientCommandSource> target,
+                                     Map<CommandNode<FabricClientCommandSource>, CommandNode<FabricClientCommandSource>> originalToCopy) {
+        for (CommandNode<FabricClientCommandSource> child : origin.getChildren()) {
+            CommandNode<FabricClientCommandSource> result = child.createBuilder().build();
+            originalToCopy.put(child, result);
+            target.addChild(result);
+
+            if (!child.getChildren().isEmpty()) {
+                copyChildren(child, result, originalToCopy);
+            }
+        }
     }
 
     public void dispatch(String message) throws CommandSyntaxException {
@@ -83,7 +112,7 @@ public class Commands extends System<Commands> {
     }
 
     public CommandDispatcher<CommandSource> getDispatcher() {
-        return DISPATCHER;
+        return (CommandDispatcher<CommandSource>) (Object) DISPATCHER;
     }
 
     private final static class ChatCommandSource extends ClientCommandSource {
