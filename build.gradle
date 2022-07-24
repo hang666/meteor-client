@@ -7,7 +7,7 @@ plugins {
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version
+version = project.mod_version + (project.hasProperty("devbuild") ? ("-" + project.findProperty("devbuild")) : "")
 group = project.maven_group
 
 repositories {
@@ -80,7 +80,9 @@ shadowJar {
 
 processResources {
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand "version": project.version,
+               "devbuild": project.findProperty("devbuild") ?: "",
+               "commit": project.findProperty("commit") ?: ""
     }
 }
 
@@ -116,7 +118,7 @@ publishing {
     publications {
         java(MavenPublication) {
             artifactId = "meteor-client"
-            version = project.mod_version
+            version = project.hasProperty("devbuild") ? (project.mod_version + "-SNAPSHOT") : project.mod_version
 
             artifact(remapJar) {
                 builtBy remapJar
