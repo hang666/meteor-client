@@ -1,6 +1,6 @@
 /*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
+ * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client).
+ * Copyright (c) Meteor Development.
  */
 
 package meteordevelopment.meteorclient.mixin;
@@ -58,7 +58,7 @@ public abstract class GameRendererMixin {
         if (!Utils.canUpdate()) return;
         if (Modules.get().isActive(HideRenderModules.class)) return;
 
-        client.getProfiler().push("meteor-client_render");
+        client.getProfiler().push(MeteorClient.MOD_ID + "_render");
 
         if (renderer == null) renderer = new Renderer3D();
         Render3DEvent event = Render3DEvent.get(matrices, renderer, tickDelta, camera.getPos().x, camera.getPos().y, camera.getPos().z);

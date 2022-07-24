@@ -13,7 +13,7 @@ group = project.maven_group
 repositories {
     maven {
 		name = "meteor-maven"
-		url = "https://maven.meteordev.org"
+		url = "https://maven.meteordev.org/releases"
 	}
     maven {
         name = "meteor-maven-snapshots"
@@ -58,8 +58,12 @@ dependencies {
     library "meteordevelopment:starscript:${project.starscript_version}"
     library "org.reflections:reflections:${project.reflections_version}"
 
-    implementation("io.netty:netty-handler-proxy:4.1.77.Final") { transitive = false }
-    shadow("io.netty:netty-handler-proxy:4.1.77.Final") { transitive = false }
+    // Proxies
+    implementation("io.netty:netty-handler-proxy:${project.netty_version}") { transitive = false }
+    shadow("io.netty:netty-handler-proxy:${project.netty_version}") { transitive = false }
+
+    implementation("io.netty:netty-codec-socks:${project.netty_version}") { transitive = false }
+    shadow("io.netty:netty-codec-socks:${project.netty_version}") { transitive = false }
 
     library "io.gitlab.jfronny.libjf:libjf-unsafe-v0:${project.jfapi_version}"
     include "io.gitlab.jfronny.libjf:libjf-base:${project.jfapi_version}"
@@ -128,5 +132,3 @@ publishing {
         }
     }
 }
-
-apply from: "scripts/packetutils.gradle"

@@ -1,6 +1,6 @@
 /*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
+ * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client).
+ * Copyright (c) Meteor Development.
  */
 
 package meteordevelopment.meteorclient.systems.modules.misc;
@@ -33,23 +33,34 @@ public class ServerSpoof extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
     private final Setting<String> brand = sgGeneral.add(new StringSetting.Builder()
-            .name("brand")
-            .description("Specify the brand that will be send to the server.")
-            .defaultValue("vanilla")
-            .build()
+        .name("brand")
+        .description("Specify the brand that will be send to the server.")
+        .defaultValue("vanilla")
+        .build()
     );
 
     private final Setting<Boolean> resourcePack = sgGeneral.add(new BoolSetting.Builder()
-            .name("resource-pack")
-            .description("Spoof accepting server resource pack.")
-            .defaultValue(false)
-            .build()
+        .name("resource-pack")
+        .description("Spoof accepting server resource pack.")
+        .defaultValue(false)
+        .build()
+    );
+
+    private final Setting<Boolean> noSignatures = sgGeneral.add(new BoolSetting.Builder()
+        .name("no-signatures")
+        .description("Prevents the client from sending chat signature.")
+        .defaultValue(true)
+        .build()
     );
 
     public ServerSpoof() {
         super(Categories.Misc, "server-spoof", "Spoof client brand and/or resource pack.");
 
         MeteorClient.EVENT_BUS.subscribe(new Listener());
+    }
+
+    public boolean noSignatures() {
+        return isActive() && noSignatures.get();
     }
 
     private class Listener {

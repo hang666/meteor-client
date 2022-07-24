@@ -1,6 +1,6 @@
 /*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
+ * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client).
+ * Copyright (c) Meteor Development.
  */
 
 package meteordevelopment.meteorclient.systems.modules.combat;
@@ -389,7 +389,7 @@ public class CrystalAura extends Module {
 
     private final Setting<Boolean> renderSwing = sgRender.add(new BoolSetting.Builder()
         .name("swing")
-        .description("Renders hand swinging client side.")
+        .description("Renders hand swinging client-side.")
         .defaultValue(true)
         .build()
     );

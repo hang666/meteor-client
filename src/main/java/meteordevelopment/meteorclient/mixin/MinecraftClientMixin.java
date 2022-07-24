@@ -1,6 +1,6 @@
 /*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
+ * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client).
+ * Copyright (c) Meteor Development.
  */
 
 package meteordevelopment.meteorclient.mixin;
@@ -18,10 +18,6 @@ import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.render.UnfocusedCPU;
 import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.starscript.Script;
-import meteordevelopment.starscript.compiler.Compiler;
-import meteordevelopment.starscript.compiler.Parser;
-import meteordevelopment.starscript.utils.Error;
-import meteordevelopment.starscript.utils.StarscriptError;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
 import net.minecraft.client.gui.screen.Screen;
@@ -71,7 +67,7 @@ public abstract class MinecraftClientMixin implements IMinecraftClient {
     private void onPreTick(CallbackInfo info) {
         doItemUseCalled = false;
 
-        getProfiler().push("meteor-client_pre_update");
+        getProfiler().push(MeteorClient.MOD_ID + "_pre_update");
         MeteorClient.EVENT_BUS.post(TickEvent.Pre.get());
         getProfiler().pop();
 
@@ -81,7 +77,7 @@ public abstract class MinecraftClientMixin implements IMinecraftClient {
 
     @Inject(at = @At("TAIL"), method = "tick")
     private void onTick(CallbackInfo info) {
-        getProfiler().push("meteor-client_post_update");
+        getProfiler().push(MeteorClient.MOD_ID + "_post_update");
         MeteorClient.EVENT_BUS.post(TickEvent.Post.get());
         getProfiler().pop();
     }

@@ -1,18 +1,18 @@
 /*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
+ * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client).
+ * Copyright (c) Meteor Development.
  */
 
 package meteordevelopment.meteorclient.renderer;
 
 import meteordevelopment.meteorclient.MeteorClient;
+import meteordevelopment.meteorclient.events.meteor.CustomFontChangedEvent;
 import meteordevelopment.meteorclient.gui.WidgetScreen;
 import meteordevelopment.meteorclient.renderer.text.CustomTextRenderer;
 import meteordevelopment.meteorclient.renderer.text.FontFace;
 import meteordevelopment.meteorclient.renderer.text.FontFamily;
 import meteordevelopment.meteorclient.systems.config.Config;
-import meteordevelopment.meteorclient.utils.Init;
-import meteordevelopment.meteorclient.utils.InitStage;
+import meteordevelopment.meteorclient.utils.PreInit;
 import meteordevelopment.meteorclient.utils.render.FontUtils;
 
 import java.io.File;
@@ -32,7 +32,7 @@ public class Fonts {
     public static final List<FontFamily> FONT_FAMILIES = new ArrayList<>();
     public static CustomTextRenderer RENDERER;
 
-    @Init(stage = InitStage.Pre, dependencies = Shaders.class)
+    @PreInit(dependencies = Shaders.class)
     public static void refresh() {
         File target = FontUtils.getDir(FontUtils.getUFontDirs());
         for (String builtinFont : BUILTIN_FONTS) {
@@ -43,7 +43,7 @@ public class Fonts {
 
         for (String fontPath : FontUtils.getSearchPaths()) {
             FontUtils.collectFonts(FONT_FAMILIES, new File(fontPath), file -> {
-                if (file.getAbsolutePath().endsWith(BUILTIN_FONTS[0] + ".ttf")) {
+                if (file.getAbsolutePath().endsWith(BUILTIN_FONTS[1] + ".ttf")) {
                     DEFAULT_FONT_FAMILY = FontUtils.getFontInfo(file).family();
                 }
             });
@@ -64,6 +64,7 @@ public class Fonts {
 
         try {
             RENDERER = new CustomTextRenderer(fontFace);
+            MeteorClient.EVENT_BUS.post(CustomFontChangedEvent.get());
         }
         catch (Exception e) {
             if (fontFace.equals(DEFAULT_FONT)) {
