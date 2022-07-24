@@ -20,7 +20,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           gradle-version: current
-          arguments: build -Pcommit=${{ github.sha }} -Pdevbuild=${{ steps.dev-build.outputs.number }}
+          arguments: build
       - name: Upload build artifacts
         uses: actions/upload-artifact@v1
         with:
@@ -29,8 +29,8 @@ jobs:
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest-1.18"
+          automatic_release_tag: "latest-1.19"
           prerelease: false
-          title: "1.18 Build"
+          title: "1.19 Build"
           files: |
             ./build/libs/*.jar

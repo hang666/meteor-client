@@ -26,10 +26,6 @@ public class CrashReportMixin {
             sb.append("-- Meteor Client --\n");
             sb.append("Version: ").append(MeteorClient.VERSION).append("\n");
 
-            if (!MeteorClient.DEV_BUILD.isEmpty()) {
-                sb.append("Dev Build: ").append(MeteorClient.DEV_BUILD).append("\n");
-            }
-
             for (Category category : Modules.loopCategories()) {
                 List<Module> modules = Modules.get().getGroup(category);
                 boolean active = false;
