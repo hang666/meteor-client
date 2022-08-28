@@ -35,6 +35,7 @@
     "CameraMixin",
     "CapabilityTrackerMixin",
     "ChatHudAccessor",
+    "ChatHudLineMixin",
     "ChatHudMixin",
     "ChatScreenMixin",
     "ChunkAccessor",

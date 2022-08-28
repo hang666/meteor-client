@@ -8,5 +8,5 @@ package meteordevelopment.meteorclient.mixininterface;
 import net.minecraft.text.Text;
 
 public interface IChatHud {
-    void add(Text message, int messageId, int timestamp, boolean refresh);
+    void add(Text message, int id);
 }
